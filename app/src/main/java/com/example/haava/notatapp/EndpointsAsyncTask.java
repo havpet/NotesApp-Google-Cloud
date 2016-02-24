@@ -2,6 +2,7 @@ package com.example.haava.notatapp;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.provider.Settings;
 import android.util.Pair;
 import android.widget.Toast;
 
@@ -43,9 +44,11 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String[]>, Void, String
         context = params[0].first;
         String name = params[0].second[0];
         String text = params[0].second[1];
+        String deviceId = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
 
         try {
-            return myApiService.saveNote(name, text).execute().getData();
+            return myApiService.saveNote(name, text, deviceId).execute().getData();
         } catch (IOException e) {
             return e.getMessage();
         }

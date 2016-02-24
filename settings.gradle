@@ -1,1 +1,1 @@
-include ':app', ':backend'
+include ':app', ':backend', ':json-simple-1.1.1'

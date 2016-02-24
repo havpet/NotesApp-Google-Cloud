@@ -1,6 +1,8 @@
 package com.example.haava.notatapp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Pair;
@@ -25,5 +27,8 @@ public class AddNote extends AppCompatActivity {
         String[] liste = {title.getText().toString(), text.getText().toString()};
 
         new EndpointsAsyncTask().execute(new Pair<Context, String[]>(this, liste));
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

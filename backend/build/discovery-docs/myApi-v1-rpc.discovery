@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/jmKEuOPebLy7cBqqdesf8b6ACNM\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/iZk1Q2T13py8rW3c_cwCbiLVgKs\"",
  "discoveryVersion": "v1",
  "id": "myApi:v1",
  "name": "myApi",
@@ -71,6 +71,77 @@
   }
  },
  "schemas": {
+  "Entity": {
+   "id": "Entity",
+   "type": "object",
+   "properties": {
+    "appId": {
+     "type": "string"
+    },
+    "key": {
+     "$ref": "Key"
+    },
+    "kind": {
+     "type": "string"
+    },
+    "namespace": {
+     "type": "string"
+    },
+    "parent": {
+     "$ref": "Key"
+    },
+    "properties": {
+     "$ref": "JsonMap"
+    },
+    "propertiesFrom": {
+     "$ref": "Entity"
+    }
+   }
+  },
+  "EntityCollection": {
+   "id": "EntityCollection",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "Entity"
+     }
+    }
+   }
+  },
+  "JsonMap": {
+   "id": "JsonMap",
+   "type": "object"
+  },
+  "Key": {
+   "id": "Key",
+   "type": "object",
+   "properties": {
+    "appId": {
+     "type": "string"
+    },
+    "complete": {
+     "type": "boolean"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "kind": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "namespace": {
+     "type": "string"
+    },
+    "parent": {
+     "$ref": "Key"
+    }
+   }
+  },
   "MyBean": {
    "id": "MyBean",
    "type": "object",
@@ -82,9 +153,32 @@
   }
  },
  "methods": {
+  "myApi.getNotes": {
+   "id": "myApi.getNotes",
+   "allowGet": true,
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "returns": {
+    "$ref": "EntityCollection"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
   "myApi.saveNote": {
    "id": "myApi.saveNote",
    "parameters": {
+    "deviceId": {
+     "type": "string",
+     "required": true
+    },
     "text": {
      "type": "string",
      "required": true
@@ -96,7 +190,8 @@
    },
    "parameterOrder": [
     "title",
-    "text"
+    "text",
+    "deviceId"
    ],
    "returns": {
     "$ref": "MyBean"

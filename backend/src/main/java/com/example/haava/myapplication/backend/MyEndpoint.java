@@ -13,7 +13,10 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.*;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.apphosting.datastore.DatastoreV4;
@@ -37,29 +40,32 @@ public class MyEndpoint {
 
     /** A simple endpoint method that takes a name and says Hi back */
     @ApiMethod(name = "saveNote")
-    public MyBean sayHi(@Named("title") String title, @Named("text") String text) {
+    public MyBean saveNote(@Named("title") String title, @Named("text") String text, @Named("deviceId") String deviceId) {
         MyBean response = new MyBean();
 
-        response.setData("Success");
+        response.setData("Notatet ble lagt til");
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        MemcacheService memcache = MemcacheServiceFactory.getMemcacheService();
 
         Entity notatInn = new Entity("Note");
         notatInn.setProperty("title", title);
         notatInn.setProperty("text", text);
+        notatInn.setProperty("deviceId", deviceId);
 
         datastore.put(notatInn);
-        memcache.put("cache", notatInn);
 
         return response;
     }
 
-    /*public String[] getNotes() {
+    @ApiMethod(name = "getNotes")
+    public List<Entity> getNotes(@Named("id") String deviceId) {
+        MyBean response = new MyBean();
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        Query query = new Query("Note");
-        List<Entity> notesList = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(20));
+        Filter userFilter = new FilterPredicate("deviceId", FilterOperator.EQUAL, deviceId);
+        Query query = new Query("Note").setFilter(userFilter);
+        PreparedQuery pq = datastore.prepare(query);
 
 
-    }*/
+        return pq.asList(FetchOptions.Builder.withLimit(100));
+    }
 
 }

@@ -3,6 +3,7 @@ package com.example.haava.notatapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -31,18 +32,7 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
 
-
-        ListView list = (ListView) findViewById(R.id.notelist);
-        ArrayList<String> array = new ArrayList<String>();
-        array.add("Element1");
-        array.add("Element2");
-        array.add("Element3");
-        array.add("Element4");
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, array);
-
-        list.setAdapter(adapter);
+        new AsyncGetNotes(this).execute(new Pair<Context, String>(this, "lala"));
 
     }
 
@@ -71,5 +61,11 @@ public class MainActivity extends AppCompatActivity {
     public void fabClick(View view) {
         Intent intent = new Intent(this, AddNote.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new AsyncGetNotes(this).execute(new Pair<Context, String>(this, "lala"));
     }
 }
